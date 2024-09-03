@@ -1,0 +1,1862 @@
+
+html {
+  -webkit-appearance: none;
+  -webkit-text-size-adjust: 100%;
+ padding: 0;
+ margin: 0;
+ scroll-behavior: smooth; 
+ font-size: 10px;
+}
+
+body {
+ background-color: #fff;
+ font-family: "YuMincho","Yu Mincho","游明朝体","游明朝",'ヒラギノ明朝 ProN','Hiragino Mincho ProN', 'MS Mincho','ＭＳ 明朝',serif;
+ // 游明朝はmacosとWindowsにデバイスインストールされているが、太さが異なる↓
+ // ・macos"YuMincho","游明朝体" weightはMedium=500,Demibold=600
+ // ・Windows"Yu Mincho","游明朝",weightはRegular=500,Demibold=600
+ // なので、自分のPC（Windows）からfigmaでrealestate（複製）を開くと、
+ // テキストのプロパティに 「Yu Mincho」、太さの欄に「Regular」なら、macos「Medium（500）」と同じってこと。
+ // 太さの欄に「Demibold」なら、macosでも同じく「Demibold=600」ってこと。
+ font-size: 1.8rem;     // 1.8rem（18px)が最多なので
+ font-weight: 500;  // 500が最多のfont-weightなので、「Regular」って書くと効かない理由が不明。
+ color: #000; 
+ letter-spacing: 0;
+}
+
+picture img {
+ width: 100%;
+}
+
+a {
+  cursor: pointer;
+}
+
+// sassで変数やmixinを定義
+$main-color: rgba(77, 150, 0, 1);
+$base-color: rgba(77, 150, 0, 0.102);
+
+@mixin text-style {
+  font-size: 2rem;
+  line-height: calc(33 / 20);
+}
+
+@mixin e-title-style($value:rgba(77, 150, 0, 1)) {
+  font-size: 3rem;
+  line-height: 1.1;
+  color: $value;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+}
+
+@mixin pc {
+  @media only screen and (min-width: 768px) { //768pxは変数を使用しても良い
+    @content;
+  }
+}
+
+@mixin sp {
+  @media only screen and (max-width: 767px) { //767pxは変数を使用しても良い
+    @content;
+  }
+}
+
+@mixin min($width) {
+  @media only screen and (min-width: #{$width}) {
+    @content;
+  }
+}
+
+@mixin max($width) {
+  @media only screen and (max-width: #{$width}) {
+    @content;
+  }
+}
+
+
+//------------common--------------
+// PC、SPの非表示 とりあえず記述し、あとでhtmlで使う感じか？*/
+        
+@media (max-width: 767px) {
+  .pc {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .sp {
+    display: none !important;
+  }
+}
+
+//------------フワっと出現--------------
+// 各sectionに↓のclassを持たせてフワっと出現させる
+// main.jsのjs-activeとコンビ
+
+.js-scroll {
+  opacity: 0;
+  transform: translateY(7rem);
+}
+.js-scroll.js-active {
+  opacity: 1;
+  transform: translateY(0);  
+  transition: opacity 3s ease,transform 1s ease;
+}
+
+
+// -------header-------
+header {  
+ width: 100%;
+ height: 8rem;  
+ position: fixed;
+ z-index: 999;
+ top: 0;
+ left: 0;
+  @include max(767px) {
+      height: 5rem;     
+  }
+}
+
+.header-inner {   
+  width: 100%; 
+  height: inherit;
+  padding-inline: 80px;  
+  margin-inline: auto; 
+  display: flex;    
+  justify-content: space-between;
+  align-items: center; 
+   @include max(1024px){
+    padding-inline: 40px;    
+    display: flex;        
+    position: relative;
+   }
+   @include max(767px){
+    padding-inline: 20px;    
+    display: flex;        
+    position: relative;
+  }
+ }
+
+.header-logo-box {
+  // background-color: red;
+  // width: calc(200 / 1080 * 100vw);
+  // width: 200px;   /////////////////////////
+  height: inherit;    
+@include max(767px){
+  padding-top: 0px;
+ }
+}
+
+.header-name,
+.header-name-sp-scroll {  
+  //  font-size: 2rem;
+  height: inherit;
+  color:#fff;
+  padding-top: 28px;
+  @include text-style; 
+   @include max(1020px){       
+    font-size: 1.7rem;    
+    line-height: calc(33 / 20);    
+   }
+   @include max(767px){
+    font-size: 2rem;    
+    padding-top: 8px;
+   }
+}
+
+.header-nav-wrap {
+   height: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-nav {
+  width: 100%;
+  height: inherit;  
+}
+
+.header-nav-list {  
+  // background-color: aqua;
+  height: inherit;   
+  display: flex;
+  align-items: center;  
+}
+
+
+//ヘッダーナビの下線をひく実験-----------
+.header-nav-list-li {
+  height: inherit;  
+  display: flex;
+  align-items: center;
+}
+
+//最後の.header-nav-list-liの子要素（header-nav-btn）をセレクタ
+.header-nav-list-li:last-child .header-nav-btn {
+  padding-inline: 14.5px 0;
+}
+
+.header-nav-btn {  
+  // background-color: #000;
+  height: inherit;
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  line-height: calc(33 / 18);     
+  color:#fff;
+  transition: all 0.4s ease-out;
+  padding-top: 10px; 
+  padding-inline: 14.5px;
+  @include max(1020px){
+   font-size: 1.4rem;  
+   padding-inline: 11px;
+  }
+}
+
+.menu-border {
+  position:relative;
+}
+
+.menu-border::after {
+  position: absolute;
+  content: " ";
+  display: block;
+  border-bottom: solid 1.5px #fff;
+  bottom: 3px;
+  width: 0;
+  transition: width 0.3s ease-out; // 幅変更のアニメーションの時間（0.3秒）
+}
+
+//hover＋半角スペース＋子要素の書き方↓
+.header-nav-btn:hover .menu-border::after {
+  width: 100%; /* hover時に幅を100%に */
+}
+.header-nav-btn:hover {
+  opacity: 0.5;
+}
+
+.scroll-change-01 {
+  color: #000;
+}
+
+.scroll-change-02 .menu-border::after {
+  border-bottom-color: #000;  //スクロール時の下線の色 
+  transition: border-bottom-color 0.4s ease; //下線の色をスムーズに変更 */
+  transition: width 0.3s ease-out; // 幅変更のアニメーションの時間（0.3秒）
+}
+// ↑ スクロール時の色変更に備えて下線の色を黒にするためのクラス
+// main.jsにaddClassで.scroll-changeを追加したときに、.menu-border::afterに
+// スタイルをあてる書き方。既述の.menu-border::after{}内でなく、.scroll-change
+// 追加時にスタイルをあてる書き方にしている。
+// hover＋半角スペース＋子要素の書き方
+
+
+/* ハンバーガーメニュー */
+.hamburger {
+  position: fixed;
+  top:0;
+  right: 0;
+  width: 72px;
+  height: 52px;
+  background-color: #fff;
+  // border: 2px solid #000;
+  cursor: pointer;
+
+  transition: 0.3s; /* スムーズなアニメーション */
+}
+/* 三本線 */
+.hamburger-line,
+.hamburger-line::before,
+.hamburger-line::after {
+  position: absolute;
+  top: 21px;
+  left: 20px;
+  width: 32px;
+  height: 4px;
+  background: $main-color;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  border-radius: 25px;
+}
+.hamburger-line::before,
+.hamburger-line::after {
+  content: "";
+  left: 0;
+}
+.hamburger-line::before {
+  top: -12px;
+}
+.hamburger-line::after {
+  top: 12px;
+}
+
+//---クリック時の三本戦を☓にする措置（はじめ）---
+/* アクティブ時のスタイル */
+.is-active .hamburger-line {
+  background: transparent; /* 中央の線を透明に */
+}
+
+.is-active .hamburger-line::before {
+  transform: rotate(45deg); /* 斜めの線 */
+  top: 0; /* 位置調整 */
+}
+
+.is-active .hamburger-line::after {
+  transform: rotate(-45deg); /* 反対の斜め線 */
+  top: 0; /* 位置調整 */
+}
+//---クリック時の三本戦を☓にする措置（終わり）---
+
+/* ナビゲーション（中身） */
+.ham-menu {
+  display: none;
+  overflow: hidden;
+  position: fixed;
+  width: 300px;
+  height: 348px;
+  top: 51px; 
+  right: 0;
+  bottom: 0;
+  // border: 2px solid #000;
+  background-color: $main-color;  
+}
+
+.ham-menu ul {
+  margin: 0;  
+  list-style: none;  
+}
+
+.ham-menu ul li {
+  height: 58px;
+  background-color: $main-color;  
+}
+
+.ham-menu ul li a {
+  height: inherit;
+  display: flex;
+  align-items: center; 
+  padding-left: 20px;  
+  color: #fff;
+  font-size: 1.8rem;
+  line-height: calc(33 / 18);
+  transition: 0.4s;  
+}
+
+.ham-menu ul li:hover {
+  background-color: #000;
+}
+
+// -----------mv--------------
+.mv {
+  position: relative;
+}
+
+.mv-image {   
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.mv-slider{ 
+  width: 100%;
+  position: relative; 
+}
+
+// .mv-slider > div {
+//   background: url("images/fv-01.jpg");
+//     background-size: cover;
+//     position: relative;
+//     height: 100%;
+// }
+
+.mv-slider div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  // background-color: rgba(0, 0, 0, 0.15);
+  // ↑ 黒の透過カラー 設定 
+  }
+
+.mv-contents {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: calc(340 / 1080 * 100vw);
+   @include max(767px) {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: calc(219 / 375 * 100vw);
+   }
+}
+
+.mv-catch {
+  // background-color: grey;
+  width: 56.7rem; 
+  // height: calc(140 / 1080 * 100vw);
+  margin-inline: auto;
+  text-align: center;
+    @include max(767px) {
+      width: 28.5rem;
+      margin-inline: auto;
+      text-align: center;
+    }
+}
+
+.mv-catch h2  {
+  color:#fff;
+  font-size: 4rem;
+  font-weight: 600;
+  line-height: calc(70 / 40);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;  
+  // ↓ シャドウの数値をfigmaからコピー
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 1);
+    @include max(767px) {
+      color:#fff;
+      font-size: 3rem;
+      line-height: calc(60 / 30);
+      letter-spacing: 0.3em;
+      text-indent: 0.3em; 
+    }
+}
+
+.pc-pad {
+  padding-left: 12px;
+}
+.sp-pad {
+  padding-left: 0px;
+}
+@include max (767px) {
+  .sp-pad {
+    padding-left: 12px;
+  }
+}
+
+// -----about-----
+.about-image {
+  position: relative;
+}
+
+.about-catch {  
+  //----------手順1------------
+  writing-mode: vertical-rl; // テキスト縦書き
+  display: flex;
+  flex-direction: column;    // 左から右に並ぶようにしてる
+  
+  //----------手順2------------  
+  position: absolute; 
+  top: 50.3%;  
+  left: 35%;  
+  transform: translate(-50%,-50%); //最初にこれを書いておいて、上のtop,leftを定めれば画面幅変わっても同じ比率を保つ
+  // transform: translateX(-50%);と分けて書いてもOK
+  // transform: translateY(-50%);と分けて書いてもOK
+  padding-left: 40px;  // 画面が狭くなって左端に寄っても画面いっぱいにならず、常に40pxの余白を維持
+
+  //----------手順3------------
+  white-space: nowrap; //手順1.2終わった時点でテキストが折れて2行になるので、折れないようにする
+                       //nowrap=テキストは折り返されず、一行として表示する値
+  //----------手順3終了---------    
+
+    @include max(1024px) {      
+      left: 40%;      
+    }
+    @include max(767px) {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);      
+      display: flex;
+      flex-direction: row;  //　縦書きを維持しているので、rowを記述して上から下に配置
+      column-gap: 24px;     //　縦書きを維持しているので、column-gapで縦に並ぶ要素間の余白を指定
+      padding-left: 0px;
+    }
+  }
+
+.about-title {
+font-size: 3rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  margin-left: 30px;
+   @include max(1024px) {
+     font-size: 2.8rem;     
+   }
+   @include max(767px) {
+     margin: 0 auto;
+     font-size: 2.5rem;
+     line-height: 1.19;
+     letter-spacing: 0.2em;     
+   }
+}
+
+.about-text-wrap {
+    @include max(767px) {
+      margin: 0 auto;      
+    }
+}
+
+.about-text {   
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: 0.36em;  
+  padding-right: 30px;
+    @include max(1024px) {
+      font-size: 1.7rem;      
+    }
+    @include max(767px) {
+      font-size: 1.6rem;
+      line-height: 1.25;
+      letter-spacing: 0.23em;
+      padding-right: 6px;          
+    }    
+}
+
+@include max(767px) {
+.first-line {
+  padding-right: 0px;
+} 
+}
+
+
+// -----service-----
+#service {
+  background: $base-color;  
+  padding-block: 81px;
+  @include max(767px) {
+    background: $base-color;  
+    padding-block: 52px;
+  }
+}
+
+.inner {
+  max-width: 1000px;
+  width: 100%; //1000pxってこと。
+  padding-inline: 40px;
+  margin-inline: auto;
+  position: relative;
+    @include max(767px) {
+      // max-width: 1000px;
+      // max-width: calc(345 / 375 * 100vw);
+      width: 92%;
+      padding-inline: 15px;
+      margin-inline: auto;
+      position: relative;
+    }
+}
+
+.title-wrap {  
+  display: grid;
+  row-gap: 6px;
+  text-align: center;  
+  padding-bottom: 69px;
+  @include max(767px) {
+    display: grid;
+    row-gap: 6px;
+    text-align: center;  
+    padding-bottom: 37px;
+  }
+}
+
+.e-title-box h2 {
+  @include e-title-style;
+}
+
+.title-kana-box h2{
+  @include text-style;
+  // font-size: 2rem;
+  // line-height: calc(33 / 20);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em; 
+}
+
+.service-wrap {    
+  display: grid;
+  row-gap: 80px;
+    @include max(767px) {  
+      display: grid;
+      row-gap: 50px;
+    }
+}
+
+.service-list:nth-of-type(odd){
+    position: relative;  
+    display: flex;
+    flex-direction: row;
+      @include max(767px) {
+        position: static;
+        display: flex;      
+        flex-direction: column;      
+      }
+  }
+  
+  .service-list:nth-of-type(even){
+    position: relative;  
+    display: flex;
+    flex-direction: row-reverse;  
+      @include max(767px) {
+        position: static;
+        display: flex;
+        flex-direction: column;
+      }
+  }
+
+.service-img-area {
+  width: 65%;
+  display: grid;
+  row-gap: 21px;
+  position: absolute;
+  top:0;
+  left: 0;
+  transform: translateY(0%);
+  z-index: 11;    
+    @include max(767px) {
+      width: 100%;
+      display: grid;
+      row-gap: 2px;
+      position: static;
+    }
+}
+
+.service-img-area-even {
+  width: 65%;
+  display: grid;
+  row-gap: 21px;
+  position: absolute;
+  top:0;
+  right: 0;
+  transform: translateY(0%);
+  z-index: 11;    
+    @include max(767px) {  
+      width: 100%;
+      display: grid;
+      row-gap: 2px;
+      position: static;
+    }
+}
+
+// ↓ 767以下のみで発動
+@include max(767px) {
+  .image-caption {
+    margin-top: 4px;
+    margin-bottom: 4px;;
+  }
+}
+
+.image-caption p {
+  font-size: 1.6rem;
+  line-height: calc(25 / 16);  
+}
+
+.green-box {
+ width: 54.3%;  
+ background-color: $main-color;
+ color: #fff; 
+ display: grid;
+ row-gap: 17px;
+ margin-top: 15.7%;
+  @include max(767px) {  
+    width: 100%;         
+    display: grid;
+    row-gap: 14px;
+    margin-top: 0;     
+    padding-block: 20px 12px; 
+    padding-inline: 20px;
+  }
+}
+
+.green-box-right {  
+  // padding: 50px 0 42px 220px ;  
+  padding-top: 50px;  
+  padding-bottom: 42px;
+  padding-left: 23.9%;
+  // margin-left:420px;  
+  margin-left: 45.6%;
+    @include max(1024px) {
+      padding-right: 4.2%;
+    }  
+    @include max(767px) {    
+      padding-block: 20px 12px; 
+      padding-inline: 20px;
+      margin-left: 0;
+    }
+ }
+
+.green-box-left {  
+  // padding: 50px 220px 42px 40px ; 
+  padding-top: 50px;
+  padding-right: 0;
+  padding-bottom: 42px;
+  padding-left: 4.3%;
+  // margin-right:420px; 
+  margin-right: 45.6%;
+    @include max(767px) {    
+      padding-block: 20px 12px; 
+      padding-inline: 20px;
+      margin-right: 0;    
+    }
+ }
+ 
+.green-box h3 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  // font-size: calc(25 / 1080 * 100vw);
+  line-height: calc(33 / 25);
+    @include max(767px) {
+      font-size: 2rem;
+      // font-size: calc(20 / 375 * 100vw);
+      line-height: calc(25 / 20);
+    }
+ }
+ 
+ @include min(768px) {
+  @include max(890px) {
+    .get-small {
+      font-size: 2.1rem;
+    }
+    .gb-br {
+      display: none;
+    }
+  }
+}
+
+.green-box p {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: calc(25 / 16);
+}
+  
+.align-right {
+  text-align: end;
+  @include max (767px) {
+      text-align: left;
+    }
+}
+
+// -----works-----
+#works {
+ width: 100%; 
+ padding-block: 80px 97px;
+  @include max(767px){
+    width: 100%; 
+    padding-block: 52px 40px;
+  }
+}
+
+.works-wrap { 
+  display: flex;
+  column-gap: 4.4%;
+    @include max(767px) {
+      display: grid;
+      row-gap: 22px;
+    }
+}
+
+//---画像と建物名のホバーアクション（はじめ）---
+.works-list {
+  width: 21.7%;
+  display: grid;
+  row-gap: 19px; 
+  cursor: pointer; /* カーソルを指マークに変更 */
+    @include max(767px) {
+      width: 100%;
+      display: grid;
+      row-gap: 10px;
+    }
+}
+
+.works-li-img-wrap {  
+  overflow: hidden; // はみ出した部分を隠す  
+}
+
+.works-li-img-wrap img { 
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.works-list:hover .works-li-img-wrap img {
+  transform: scale(1.05); /* ホバー時に画像を拡大 */
+  filter: brightness(1.8); // 明るさを1.8倍（80%）増加
+}
+
+.works-list:hover:hover .works-li-text-wrap p {
+  color: rgba(0, 0, 0, 0.5); //ホバー時に文字色を薄く。
+}
+//---画像と建物名のホバーアクション（おわり）---
+
+.works-li-text-wrap p {  
+ font-size: 1.6rem;
+ line-height: 1.56;
+  @include max(964px) {
+      font-size: 1.4rem;  
+    }
+  @include max(855px) {
+      font-size: 1.2rem;
+    }
+  @include max(767px) {
+      font-size: 1.6rem;
+    }
+ } 
+ 
+//---------------------------------------------
+
+/* モーダル全体 */
+.modal-area {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+}
+/* モーダル外の背景 */
+.modal-bg {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.502);
+}
+/* モーダル外の内容部分 */
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  // width: 450px;
+  width: 41.6%;
+  // height: auto;
+  text-align: center;
+  //background: rgba(255, 255, 255, 1);
+  background-color: #fff;
+  padding: 15px 15px 0px;
+    @include max(767px) {    
+      // width:315px;
+      width: 84%;
+      padding: 20px 20px 0px;
+    }
+}
+
+.modal-open {
+  overflow: hidden; /* スクロールを無効化 */
+}
+
+.m-image-wrap {
+  width: 100%; 
+  margin-inline: auto;
+}
+
+.m-img {
+  aspect-ratio: 274 / 144;
+  width: 100%; /* コンテナの幅に合わせる */
+  height: auto; /* 高さは自動調整 */
+  object-fit: cover; /* 画像の切り抜きを防ぐために cover を使用 */
+}
+
+.m-caption {
+  padding-block: 9px 6px;
+  text-align: left;
+   @include max(767px) {
+     padding-block: 7px 14px;
+     text-align: left;
+   }
+}
+
+.m-caption p {
+ font-size: 1.6rem;
+ line-height: calc(25 / 16);
+}
+
+@include max(497px) {
+  .ib-modal-03 {
+    display: inline-block;
+  }
+}
+
+/* ウィンドウを閉じるボタン */
+.modal-cancel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.modal-cancel::before {
+  content: '×'; /* Unicode 文字 */
+  font-size: 18px; /* フォントサイズ */
+  color: #000; /* 文字色 */
+  display: inline-block; /* インラインブロック要素にする */
+  width: 18px; /* 幅 */
+  height: 18px; /* 高さ */
+  text-align: center; /* 文字を中央揃え */
+  line-height: 18px; /* 行の高さ */
+}
+
+
+
+// -----news-----
+#news {
+  background: $base-color;
+  padding-block: 80px 80px;
+    @include max(767px) {
+      background: $base-color;
+      padding-block: 50px 52px;
+    }
+}
+
+.news-wrap {
+  display: flex;
+  column-gap: 6.5%;
+    @include max(767px) {
+      display: grid;
+      row-gap: 53px;
+    }
+}
+
+.news-news,.news-blog {
+  width: 46.7%;
+    @include max(767px) {
+      width: 100%;
+    }
+}
+
+.green-area {
+  padding-inline: 20px;  
+  background-color: $main-color;
+  padding-block: 8px;
+}
+.green-area p {
+  color: #fff;  
+  font-weight: 600; 
+  @include text-style;  
+}
+
+article {
+  border-bottom: solid 1px #55A500;
+}
+
+.article-wrap {
+  background-color: #fff;
+  padding-block: 10px 0px;
+  padding-inline: 4.65%;  
+    @include max(767px) {
+      background-color: #fff;
+      padding-block: 10px 0px; 
+      padding-inline: 6.3%;  
+    }
+}
+
+.a-link{
+  display: flex;
+  column-gap: 16.6%;
+  padding-block: 13px 12px;  
+  transition: 0.4s;
+    @include max(767px) {  
+      display: flex;    
+      column-gap: 4.7%;        
+    }
+}
+
+.a-link:hover {
+  opacity: 0.4;
+}
+// 本当は、hover字に文字色と太さを変えるってやってみたいのにできない。
+// .date timeのスタイルにfont-weight:normal;を書くと、
+// ↓のfont-weight: bold;が効くが、.date timeに何も書かないと
+// 一括指定のfont-weight: 500;が適用され、↓のboldは効かない。
+// .a-link:hover .date time,
+// .a-link:hover .text p {
+//   color: red;
+//   font-weight: bold; // ホバー時に太字にする
+// }
+
+.date {
+  width: 57px;
+}
+
+.date time {
+  font-size: 1.6rem;
+  line-height: calc(33 / 16);
+  letter-spacing: -0.03em;
+  // font-weight: normal; /* 通常の太さ */
+}
+
+.text {  
+  padding-top: 6px; 
+  flex: 1;
+}
+
+.text p {
+  font-size: 1.8rem;
+  line-height: calc(25 / 18);  
+}
+
+.w-space {
+  width: 100%;
+  // background-color: aqua;    
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link-more {
+  // background-color: grey;  
+  padding-block: 17px 20px;  
+  transition: transform 0.3s ease;
+}
+
+.link-more:hover {
+  transform: translate(10px, 0px);   
+}
+
+.more-wrap {  
+  width: 100%;  
+  // padding-top: calc(17 / 80);
+  padding-top: 21.25%;    
+}
+
+.more-wrap p {    
+  color: #55A500;
+  font-size: 2.2rem; 
+  // カンプだと「20px」（2rem）だが、ピクパで合わないので拡大
+  font-weight: 600;  
+  // ↑「Demibold」と書くと効いてない理由がわからない
+  line-height: 0;
+  // ↑ 「more」と矢印画像の間を詰めるため
+  letter-spacing: -0.05em;
+}
+
+.arrow-wrap  {
+  width: 100%;  
+  }
+
+// -----company-----
+
+#company {  
+  padding-block: 81px 80px;
+    @include max(767px) { 
+        padding-block: 50px;
+      }
+}
+
+.e-title-box-other h2 {
+  @include e-title-style(#55A500);
+}
+
+@include max(767px) {
+  .com-wrap {
+   display: grid;
+   row-gap: 20px;
+  }
+}
+
+.com-green-box-parent {
+  padding-top: 198px;
+  padding-left: 45.6%;
+    @include max(767px) {
+        padding-top: 0;
+        padding-left: 0;
+      }
+}
+
+.com-green-box {
+  background-color: $main-color;
+  color: #fff;  
+  //padding: 41px 5px 50px 220px;
+  //padding: 8.2% 1% 10% 44%;
+  //padding: 10% 1% 7.8% 44%;
+  padding: 47px 1% 42px 44%;
+    @include max(867px) {       
+      //padding: 8.2% 1% 10% 44%;
+      padding: 41px 3.6% 50px 41%;
+      }
+    @include max(767px) { 
+      //padding: 19px 20px 12px 20px;
+      //padding: 8.2% 1% 10% 44%;
+      padding: 19px 6.3% 12px 6.3%;
+      }
+}
+
+.com-iframe-box {
+ position: relative; 
+  @include max(767px) {
+    position: static; 
+  }
+}
+
+.iframe-wrap {  
+  width: 65.21%;
+  height: 400px;  
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  transform: translateY(0%);
+    @include max(767px) {
+      width: 100%;
+      height: 300px;  
+      position: static;
+    }
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  // aspect-ratio: 600 / 400;  
+    @include max(767px) {    
+        aspect-ratio: 600 / 400;
+      }
+}
+
+.com-gb-name p {
+  padding-top: 2px;
+ font-size: 2rem;
+ font-weight: 600;
+ line-height: 1.65;
+}
+
+.com-gb-address {
+  //margin-block: 7px 12px;
+  margin-block: 2.8% 4.7%;
+}
+
+@include min(387px) {
+  @include max(767px) {
+    .none-387-767 {
+      display: none;
+     }
+  }
+}
+
+.com-gb-address p {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.56;
+ }
+ 
+ @include min(768px) {
+  .tel {
+    pointer-events: none;
+  } 
+}
+
+ .com-gb-tel p {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.56;
+ }
+ .com-gb-tel span {
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1;
+  
+ }
+
+ .com-gb-mail {
+  //margin-top: 19px;
+  margin-top: 5.3%;
+ }
+ .com-gb-mail p {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.56;
+ }
+
+ @include min(1024px){
+  .br-mail {
+    display: none;  
+  }
+ }
+  @include max(767px){
+  .br-mail {
+    display: none;  
+   }
+  }
+
+
+
+// -----contact-----
+
+#contact {
+  background: rgba(77, 150, 0, 0.149);
+  padding-block: 82px;
+    @include max (767px) {
+        background: $base-color;  
+        padding-block: 50px;
+      }
+}
+
+.con-title-wrap {  
+  display: grid;
+  row-gap: 6px;
+  text-align: center;  
+  padding-bottom: 36px;
+}
+
+.con-inner {
+  // max-width: 1000px;
+  max-width: 860px;
+  width: 100%; //1000pxってこと。
+  padding-inline: 30px;
+  margin-inline: auto;
+  position: relative;
+    @include max (767px) {
+      // max-width: 1000px;
+      // max-width: calc(345 / 375 * 100vw);
+      width: 92%;
+      padding-inline: 15px;
+      margin-inline: auto;
+      position: relative;
+    }
+}
+
+.attention p {
+  @include text-style;  
+}
+
+@include min(407px) {
+  @include max(803px) {
+    .ib-407-803 {
+      display: inline-block;
+    }
+  }
+}
+
+.con-sec-form-block {
+  margin-top: 67px;
+    @include max (767px) {
+        margin-top: 39px;
+      }
+}
+
+.form-flex {
+  display: flex;
+    @include max (767px) {
+        display: grid;    
+        column-gap: 0;
+      }
+}
+
+.item {
+  width: 21.25%;  
+  height: 50px;
+  // padding-top: 4px;
+  display: flex;
+  align-items: center;
+  @include text-style;  
+    @include max(1024px) {
+      width: 24%;  
+    }
+    @include max(767px) {
+      width: 53.9%;  
+      height: auto;
+      // padding-top: 1px;    
+    }
+}
+
+.name-label {
+  font-weight: 500;
+}
+
+.space-or-btn {
+  flex: 1;
+} 
+
+::placeholder {
+  color: #A0A0A0;
+  font-size: 1.6rem;
+  font-weight: 300; 
+  // ↑ figmaでは500で表示⇒このscssでもroot設定（500）なのに、
+  // ピクパと合わない。300がちょうどよかった。理由は不明。
+  line-height: calc(25 / 16);
+}
+.form-control {
+  background: #fff;
+  width: 100%;
+  height: 50px;  
+  padding-inline: 20px;
+  display: block;
+}
+
+@include max(767px) {
+.short-767 {
+  //width: 90px;
+  width: 27%;
+ }
+}
+
+.form-gender {
+  display: flex;
+  margin-block: 43px 41px;
+    @include max(767px) {
+        display: flex;
+        margin-block: 30px 29px;
+      }
+}
+
+// -----ラジオボタンの実装（ここから）-----
+.radio-wrap {
+  // background-color: aqua;
+  width: 100%;
+  display: flex;
+  column-gap: 10.9%;
+  align-items: center;  
+}
+.radio__btn {
+  appearance: none;  
+}
+.radio__text {
+  // background-color: yellow;
+  padding-left: 37px;
+  position: relative;
+  cursor: pointer;
+  font-size: 1.8rem;
+  line-height: calc(25/ 18);
+}
+.radio__text::before {
+  content: '';
+  display: block; 
+  border-radius: 50%; 
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+.radio__btn:checked +.radio__text::after {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  left: 7px;
+  transform: translateY(-50%);
+}
+// -----ラジオボタンの実装（ここまで）-----
+
+#your-email-label {
+  letter-spacing: 0.01em;
+}
+
+.form-category {
+  margin-block: 51px 41px;
+    @include max (767px) {
+        margin-block: 29px 29px;
+      }
+}
+
+//---select（問い合わせ種別）ボタンの実装(始め)-----
+.cate-pull-down {  
+  position: relative;
+  width: 100%;
+}
+
+.cate-pull-down::before {
+    content: "";
+    width: 10px;
+    height: 0;
+    border-style: solid;
+    // border-width: 5px 5px 0 5px;    
+    border-width: 12.5px 9.5px 0px 9.5px;
+    border-color: $main-color transparent transparent transparent;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+.cate-option  {
+  background-color: #fff;
+  width: 100%;
+  height: 50px;  
+  // padding-top: 5px;
+  padding-inline: 20px 0px;
+  cursor: pointer;
+  display: block;  
+  // デフォルトの矢印を削除
+  -webkit-appearance: none;
+  appearance: none; 
+  font-size: 1.8rem;
+  line-height: calc(25 / 18);
+    @include max (767px) {
+        font-size: 1.6rem;
+        line-height: calc(25 / 16);
+      }
+}
+
+.cate-option::-ms-expand {
+  display: none; /* デフォルトの矢印を非表示(IE用) */
+}
+
+.form-textarea {
+  background: #fff;
+  width: 100%;
+  min-height: 200px;
+  resize: vertical; //←縦方向だけ調整するプロパティ＋値
+  font-size: 1.6rem;
+  line-height: calc(25 / 16);
+  padding: 10px 20px;
+}
+//---select（問い合わせ種別）ボタンの実装(終わり)-----
+
+.form-text-content {
+  display: block;
+}
+
+.find-out-method {
+  margin-block: 52px 8px;
+    @include max(767px) {
+      margin-block: 31px 0px;
+    }
+}
+
+.find-out-method p {  
+  @include text-style;  
+    @include max(767px) { 
+      font-size: 2rem;
+      line-height: calc(27 / 20);
+    }
+}
+
+@include max(534px) {
+  .ib-534 {
+    display: inline-block;
+  }
+}
+
+// -----チェックボタンの実装（ここから）-----
+.form-checkbox {   
+  display: flex;
+  flex-wrap: wrap;
+  // column-gap: 4.5%;  
+}
+
+.media-check {   
+  width: 25%;
+  // display: block;
+  position: relative;
+  margin: 0 0;
+  padding-top: 1px;
+  // padding-left: calc(40 / 800);
+  padding-left: 5%;
+  padding-bottom: 13px;
+  cursor: pointer;
+  user-select: none; /* テキストの選択を防ぐ */
+  font-size: 1.8rem;
+  line-height: calc(25 / 18);
+    @include max(767px) {
+        width: 50%;                
+        padding-left: 9.5%;
+        padding-bottom: 4px;               
+        font-size: 1.6rem;
+        line-height: calc(25 / 16);
+      }
+}
+
+.pad-left-little {
+  padding-left: 5.5%;
+    @include max(767px) {
+      padding-left: 9.5%;
+    }
+}
+
+/* inputは非表示にする */
+.media-check input {
+  display: none;
+}
+
+/* □ */
+.checkmark {
+  background-color:#fff;
+  position: absolute;
+  // top: 3px;
+  top: 6.3%; /* 上からの位置 */
+  left: 2px;
+  height: 20px; /* 大きさ */
+  width: 20px; /* 大きさ */
+  // border: solid 1px #000; /* 線 */
+  border-radius: 0;
+  box-sizing: border-box;
+}
+/* ✓ */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  left: 7px; /* チェックの位置 */
+  top: 4px; /* チェックの位置 */  
+  width: 6px; /* チェックの大きさ */
+  height: 10px; /* チェックの大きさ */
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0; /* 透明にしておく チェック入った時に透明解除する構造 */
+}
+
+/* チェックが入ったときの□ */
+.media-check input:checked + .checkmark {
+  // background: #2e80ff; /* チェック時の色。✓が黒なのでコメントアウト　*/
+  // border-color: #2e80ff; /* チェック時の色。✓が黒なのでコメントアウト*/
+}
+
+/* チェックが入ったときの✓ */
+.media-check input:checked + .checkmark:after {
+  opacity: 1; /* 透明を解除 */
+}
+// -----チェックボタンの実装（ここまで）-----
+
+.privacy-policy-title {
+  @include text-style;  
+  margin-block: 38px 10px;
+    @include max(767px) {
+      @include text-style;  
+      margin-block: 25px 0px;
+    }
+}
+
+.privacy-policy {  
+  width: 100%;
+  background-color: #fff;
+  //padding: 40px 60px 40px 40px;  
+  padding: 10px 10px 10px 40px;  
+  //position: relative;  // スクロールバーの位置調整のため  
+    @include max(767px) {             
+      // padding: 30px 50px 30px 30px;  
+      padding: 10px 10px 23px 0px;  
+    }
+}
+
+.privacy-policy-inner {
+  width: 100%;
+    height: 280px;
+    overflow-y: scroll;// height:280pxを指定した上で、y軸（縦）のスクロール設定
+    -ms-overflow-style: none;
+    /* IE, Edge 対応 */
+    scrollbar-width: none;
+    /* Firefox 対応 */
+    //padding: 30px 40px 30px 0;
+    padding: 30px 5% 30px 0;
+      @include max(767px) {
+        height: 290px;    
+        //padding: 20px 30px 0px 30px;
+        padding: 20px 9.5% 0px 30px;
+      }
+}
+
+// スクロールバーのつまみ
+.simplebar-scrollbar::before {  
+  border-radius: 0 !important;
+  width: 10px;  // 
+  height: 33px; //  
+  margin-top: -2px;  //デフォルトだと上に隙間があったので調整
+  margin-left: -2px; //デフォルトだと左に隙間があったので調整
+}
+
+.simplebar-scrollbar.simplebar-visible::before {
+  background: #9B9B9B;
+ }
+
+/*スクロールバーのトラック (背景部分) のスタイル */
+.simplebar-track {
+  background: #E3E3E3; /* スクロールバーの背景色 */
+  width: 10px !important;  
+  height: 280px; //280pxにしない場合、スクロールの最後でつまみが沈んで短くなる?
+  @include max(767px) {
+    height: 290px;
+  }
+}
+
+// .os-scrollbar {
+//   background-color: #E3E3E3; /* スクロールバーの背景色 */
+//  }
+ 
+//  .os-scrollbar-handle {
+//   background-color: #9B9B9B; /* スクロールバーのつまみの色 */  
+//   width: 10px !important; /* 縦スクロールバーの幅 */
+//   height: 30px !important; /* 縦スクロールバーのつまみの高さ */  
+//   border-radius: 0 !important;  /* 角を丸くしない */
+//  }
+ 
+//  /* スクロールバーのトラック (背景部分) のスタイル */
+//  .os-scrollbar-track {
+//   background-color: #E3E3E3; /* スクロールバーの背景色 */
+//   width: 10px !important; 
+//   // height: 30px !important; 
+//   margin-top: -2px;  //背景とつまみのwidthを同じにしたが、ブラウザ上でズレていたので、修正
+//   margin-left: -2px; //背景とつまみのwidthを同じにしたが、ブラウザ上でズレていたので、修正
+// }
+
+//----------------------------------------------------------
+// #privacy-js {
+//   height: 200px;
+//   background-color: rgba(77, 150, 0, 0.149);
+//   border: 1px solid #000; 
+//  }
+ 
+//  .content-js {
+//   height: 500px;
+//   padding: 10px;
+//   background-color: #fff;
+//   white-space: wrap;
+//  }
+
+//  .os-scrollbar {
+//   background-color: #E3E3E3; /* スクロールバーの背景色 */
+//  }
+ 
+//  .os-scrollbar-handle {
+//   background-color: #9B9B9B; /* スクロールバーのつまみの色 */
+//   width: 10px !important; /* 縦スクロールバーの幅 */
+//   height: 30px !important; /* 縦スクロールバーのつまみの高さ */
+//   border-radius: 0 !important;  /* 角を丸くしない */
+//  }
+ 
+//  /* スクロールバーのトラック (背景部分) のスタイル */
+//  .os-scrollbar-track {
+//   background-color: #E3E3E3; /* スクロールバーの背景色 */
+//   width: 10px !important; 
+//  }
+//--------------------------------------------------------------
+
+
+// // スクロールバーの場所（幅・高さ）
+// .privacy-policy-inner::-webkit-scrollbar {
+//   width: 10px; // 縦スクロールバーの幅
+//   // height: 30px; // 横スクロールバーの幅  
+//   height: 280px;  
+//   @include max(767px) {
+//     height: 290px;
+//   }
+// }
+
+// // スクロールバーのつまみ（動く部分・クリックしてつまむ部分）
+//  .privacy-policy-inner::-webkit-scrollbar-thumb {  
+//   background-color: #9B9B9B;  
+//   width: 10px; // 縦スクロールバーの幅
+//   height: 30px;
+// }
+
+// // スクロールバーの背景
+// .privacy-policy-inner::-webkit-scrollbar-track {
+//   background-color: #E3E3E3;
+//   // margin-block: 10px 10px; 
+// }
+
+// // スクロールバーの上と下に隙間を作るためのマージン
+// .privacy-policy::-webkit-scrollbar-track {
+//   padding-top: 10px; // スクロールバーの上に隙間を作る
+//   padding-bottom: 10px; // スクロールバーの下に隙間を作る
+// }
+
+// スクロールバーの右横に隙間を作るためのパディング
+// .privacy-policy {
+//   padding-right: 20px; // 右側のパディングを増やしてスクロールバーの右側に隙間を作る
+// }
+
+.pp-head {
+  font-size: 1.8rem;
+  line-height: calc(31 / 18);
+    @include max(767px) {
+      font-size: 1.8rem;
+      line-height: calc(33 / 18);
+    }
+}
+
+.pp-detail {
+  font-size: 1.6rem;
+  line-height: calc(31 / 16);
+    @include max(767px) {
+        font-size: 1.6rem;
+        line-height: calc(33 / 16);
+      }
+}
+
+.pp-space { 
+  margin-bottom: 31px;
+    @include max(767px) {
+      margin-bottom: 33px;
+    }
+}
+
+@include max(767px) {
+.ib-376 {
+  display: inline-block;
+ }
+}
+
+.form-submit-area {
+  background-color: $main-color;
+  width: 300px;
+  margin: 80px auto 0;
+  display: flex;
+  justify-content: center;
+  padding: 9px 0 8px;
+  color: #fff;
+  @include text-style;  
+   font-weight: 600;
+   transition: 0.4s;
+    @include max(767px) {
+      background-color: $main-color;
+      width: 315px;
+      margin: 50px auto 0;
+      display: flex;
+      justify-content: center;
+      padding: 8px 0;
+    }
+}
+
+.form-submit-area:hover {
+  background-color: #fff;
+  color: $main-color;
+  border: solid 1px $main-color;
+  cursor: pointer;
+}
+
+// -----footer-----
+
+footer {
+  width: 100%;  
+}
+
+.footer-company-name {
+  // background-color: yellow;
+  padding-block: 80px 28px;
+  padding-block: 78px 26px;
+  text-align: center;
+  margin-inline: auto;
+  width: 79%;
+  border-bottom: solid 1px #000;
+    @include max(767px) {
+      padding-block: 50px 20px;      
+      width: 100%;
+      margin-bottom: 20px;
+    }
+}
+
+.footer-company-name p {
+  @include text-style;  
+}
+
+.footer-nav-wrap {
+  width: 100%; 
+  margin-inline: auto;  
+    @include max(767px) {
+      width: 100%; 
+      margin-inline: auto;
+    }
+}
+
+.footer-nav-wrap nav ul {
+ display: flex;
+//  column-gap: 50px;
+ column-gap: 5.3%;
+ justify-content: center;
+  @include max(767px) {
+    display: flex;
+    //  column-gap: 50px;
+    column-gap: 9.5%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+.footer-nav-wrap nav ul li { 
+ padding-block: 28px 30px;
+  @include max (767px) {
+    padding-block: 0px 5px;
+  }
+}
+
+.footer-nav-btn {
+  padding-block: inherit;
+  font-size: 1.8rem;
+  line-height: calc(33 / 18);
+  transition: 0.4s;
+ }
+ 
+ .footer-nav-btn:hover {
+  opacity: 0.4;
+}
+
+.sns-icon-wrap {
+  width: 100%;  
+  display: flex;
+  column-gap: 30px;  
+  justify-content: center; 
+  margin-bottom: 78px;
+    @include max(767px) {     
+      margin-top: 23px;
+      margin-bottom: 50px;
+    }
+}
+
+.sns-icon-wrap a {
+  width: 28px;
+  transition: 0.4s;
+ }
+
+ .sns-icon-wrap a:hover {
+  opacity: 0.4;
+  transform: scale(1.2);
+ }
+
+ .sns-icon-wrap a:nth-child(3) {
+  padding-top: 2px;
+ }
+
+.copy-right {
+  width: 100%;
+  background-color: $main-color;
+  padding-block: 30px;  
+  text-align: center;
+    @include max(767px) {
+      padding-block: 21px;      
+    }
+}
+
+.copy-right p {
+  color: #fff;
+  @include text-style;  
+  font-weight: 300; 
+  letter-spacing: 0.01em;
+    @include max (767px) {
+      font-size: 2rem;
+      line-height: calc(25 / 20);
+      letter-spacing: 0.01em;
+    }
+}
+
+@include max(767px) {
+  .l-s-shrink {
+    padding-right: 19px;
+  }
+}
+
+// -----戻るボタン-----
+  .back-btn {
+    width: 68px;
+    height: 68px;
+    display: none;
+    padding: 22px 20px;    
+    background-color: $main-color;
+    color: #000;
+    text-decoration: none;
+    border-radius: 50%;  
+    position: fixed;
+    bottom: 60px;
+    right: 60px;
+      @include max(767px){  
+        width: 50px;
+        height: 50px;
+        display: none;
+        padding: 13px 13px;             
+        right: 20px;
+      }
+  }
+
